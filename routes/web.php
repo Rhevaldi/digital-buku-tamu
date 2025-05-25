@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GuestBookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +21,11 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
+            View::share([
+            'title_page' => 'Dashboard',
+        ]);
+
+        
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -27,5 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+Route::resource('tamu', GuestBookController::class)->middleware(['auth']);
+
 
 require __DIR__.'/auth.php';

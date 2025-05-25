@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Dashboard</title>
+    <title>BUKU TAMU DIGITAL</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/summernote/summernote-bs4.min.css') }}">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.dataTables.css" />
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -56,13 +58,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard v1</li>
-                            </ol>
+                            <h1 class="m-0">{{$title_page}}</h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -124,6 +120,8 @@
     <script src="{{ asset('assets/dist/js/demo.js') }}"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('assets/dist/js/pages/dashboard.js') }}"></script>
+
+    <script src="https://cdn.datatables.net/2.3.1/js/dataTables.js"></script>
     <script>
         // SweetAlert dan submit form di sini
 
@@ -147,6 +145,11 @@
             })
 
         }
+
+
+        $(function () {
+      $('#tableTamu').DataTable();  
+    });
     </script>
 </body>
 

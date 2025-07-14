@@ -1,0 +1,28 @@
+
+  2025-07-07 12:44:06 Running ["artisan" tamu:cek-kunjungan] ................................ 415ms DONE
+  ⇂ "C:\xampp\php\php.exe" "artisan" tamu:cek-kunjungan > "NUL" 2>&1  
+
+
+  2025-07-07 12:44:10 Running ["artisan" tamu:cek-kunjungan] ................................ 426ms DONE
+  ⇂ "C:\xampp\php\php.exe" "artisan" tamu:cek-kunjungan > "NUL" 2>&1  
+
+
+  2025-07-07 12:44:12 Running ["artisan" tamu:cek-kunjungan] ................................ 411ms DONE
+  ⇂ "C:\xampp\php\php.exe" "artisan" tamu:cek-kunjungan > "NUL" 2>&1  
+
+
+  2025-07-07 12:45:32 Running ["artisan" tamu:cek-kunjungan] .............................................. 412ms DONE
+  ⇂ "C:\xampp\php\php.exe" "artisan" tamu:cek-kunjungan > "NUL" 2>&1  
+
+
+  2025-07-07 12:46:33 Running ["artisan" tamu:cek-kunjungan] .............................................. 426ms DONE
+  ⇂ "C:\xampp\php\php.exe" "artisan" tamu:cek-kunjungan > "NUL" 2>&1  
+
+
+  2025-07-07 12:47:34 Running ["artisan" tamu:cek-kunjungan] .............................................. 417ms DONE
+  ⇂ "C:\xampp\php\php.exe" "artisan" tamu:cek-kunjungan > "NUL" 2>&1  
+
+
+  2025-07-07 12:48:35 Running ["artisan" tamu:cek-kunjungan] ............................................ 2,265ms DONE
+  ⇂ "C:\xampp\php\php.exe" "artisan" tamu:cek-kunjungan > "NUL" 2>&1  
+

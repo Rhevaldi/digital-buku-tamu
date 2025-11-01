@@ -76,7 +76,4 @@
         <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-
-
-
 </x-app-layout>

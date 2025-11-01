@@ -26,7 +26,8 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed bg-light">
+<body
+    class="hold-transition sidebar-mini layout-fixed bg-light @if (request()->is('tamu*')) sidebar-collapse @endif">
 
     <!-- PESAN SWEETALERT 2 -->
     @if (session('message') || session('status'))
@@ -90,7 +91,7 @@
     <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 
     <script>
-        $('#tableTamu').DataTable();
+        $('.tamusTable').DataTable();
         $('.usersTable').DataTable();
         $('.purposesTable').DataTable();
         $('.bidangsTable').DataTable();

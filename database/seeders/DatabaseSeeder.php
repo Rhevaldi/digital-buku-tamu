@@ -18,11 +18,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            BidangSeeder::class,
-            PurposeSeeder::class,
-        ]);
-
         // === Buat role default ===
         $roles = ['Admin', 'Tamu'];
         foreach ($roles as $role) {
@@ -48,5 +43,11 @@ class DatabaseSeeder extends Seeder
             ]
         );
         $tamu->assignRole('Tamu');
+
+        $this->call([
+            BidangSeeder::class,
+            PurposeSeeder::class,
+            TamuSeeder::class,
+        ]);
     }
 }

@@ -9,4 +9,9 @@ class Purpose extends Model
 {
     use HasFactory;
     protected $fillable = ['name', 'description'];
+
+    public function tamu()
+    {
+        return $this->hasMany(GuestBook::class, 'purpose_id');
+    }
 }

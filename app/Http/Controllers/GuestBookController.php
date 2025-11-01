@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bidang;
+use App\Models\Purpose;
 use App\Models\GuestBook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -20,11 +21,10 @@ class GuestBookController extends Controller
     {
         // dd(GuestBook::with('bidang')->orderBy('created_at','DESC')->get());
         View::share([
-            'title_page' => 'Buku Tamu',
-            'tamu' => GuestBook::with('bidang')->orderBy('created_at','DESC')->get(),
+            'title_page' => 'Buku Tamu Digital',
+            'tamu' => GuestBook::with('bidang')->orderBy('created_at', 'DESC')->get(),
         ]);
         return view('tamu.index');
-        
     }
 
     /**
@@ -34,11 +34,12 @@ class GuestBookController extends Controller
      */
     public function create()
     {
-            View::share([
-            'title_page' => 'Buku Tamu',
-            'bidangs' => Bidang::orderBy('created_at','DESC')->get(),
+        View::share([
+            'title_page' => 'Buku Tamu Digital',
+            'bidangs' => Bidang::orderBy('created_at', 'DESC')->get(),
+            'purposes' => Purpose::orderBy('created_at', 'DESC')->get(),
         ]);
-        
+
         return view('tamu.create');
     }
 
@@ -95,15 +96,15 @@ class GuestBookController extends Controller
      */
     public function edit($id)
     {
-        
-        $data= GuestBook::findOrFail($id);
+
+        $data = GuestBook::findOrFail($id);
         // dd($data);
-            View::share([
+        View::share([
             'title_page' => 'Edit Data Tamu',
             'tamu' => $data,
-            'bidangs' => Bidang::orderBy('created_at','DESC')->get(),
+            'bidangs' => Bidang::orderBy('created_at', 'DESC')->get(),
         ]);
-        
+
         return view('tamu.edit');
     }
 
@@ -114,9 +115,9 @@ class GuestBookController extends Controller
      * @param  \App\Models\GuestBook  $guestBook
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-         $validated = $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'no_ktp' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
@@ -152,6 +153,6 @@ class GuestBookController extends Controller
     {
         $data = GuestBook::findOrFail($id);
         $data->delete();
-        return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil dihapus.');        
+        return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil dihapus.');
     }
 }

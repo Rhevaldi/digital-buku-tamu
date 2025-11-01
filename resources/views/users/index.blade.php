@@ -22,7 +22,7 @@
                     <div class="card">
                         <div class="card-header bg-success text-white">
                             <p class="float-left mb-0 pt-1 font-weight-bold">Daftar Pengguna</p>
-                            <a href="{{ route('users.create') }}" class="btn btn-light btn-sm float-right">
+                            <a href="{{ route('users.create') }}" class="btn btn-light btn-sm float-right" style="color:black !important">
                                 <i class="fas fa-plus mr-1"></i> Pengguna Baru
                             </a>
                         </div>

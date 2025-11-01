@@ -1,0 +1,30 @@
+.nav-sidebar .nav-link {
+    color: #ffffff !important; /* ubah ke putih, atau warna lain */
+}
+
+/* === Full background image === */
+body {
+    background-image: url('../../img/bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    position: relative;
+}
+
+/* === Hapus overlay putih jika tidak dibutuhkan === */
+body::before {
+    display: none;
+}
+
+/* === Buat konten transparan agar bg terlihat === */
+.content-wrapper {
+    background-color: transparent !important;
+}
+
+.main-content {
+    background-color: rgba(255, 255, 255, 0.85); /* sedikit transparan */
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    padding: 24px;
+}

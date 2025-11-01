@@ -38,7 +38,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($tamu as $data)
+                                @foreach ($tamu as $data)
                                     <tr class="text-center align-middle">
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->nama }}</td>
@@ -46,7 +46,7 @@
                                         <td>{{ $data->alamat }}</td>
                                         <td>{{ $data->no_wa }}</td>
                                         <td>{{ $data->keperluan }}</td>
-                                        <td>{{ $data->bidang->name }}</td>
+                                        <td>{{ optional($data->bidang)->name }}</td>
                                         <td>{{ $data->hari }}</td>
                                         <td>{{ $data->tanggal }}</td>
                                         <td>{{ $data->jam_masuk }}</td>
@@ -74,11 +74,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="12" class="text-center text-muted">Belum ada data tamu.</td>
-                                    </tr>
-                                @endforelse
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

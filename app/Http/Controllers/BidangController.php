@@ -15,7 +15,12 @@ class BidangController extends Controller
      */
     public function index()
     {
-        //
+        $bidangs = Bidang::orderBy('name', 'asc')->get();
+
+        return view('bidang.index', [
+            'title_page' => 'Daftar Bidang/Departemen',
+            'bidangs' => $bidangs,
+        ]);
     }
 
     /**
@@ -25,7 +30,9 @@ class BidangController extends Controller
      */
     public function create()
     {
-        //
+        return view('bidang.create', [
+            'title_page' => 'Tambah Bidang/Departemen',
+        ]);
     }
 
     /**
@@ -36,18 +43,14 @@ class BidangController extends Controller
      */
     public function store(StoreBidangRequest $request)
     {
-        //
-    }
+        $validatedData = $request->validated();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Bidang  $bidang
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Bidang $bidang)
-    {
-        //
+        Bidang::create($validatedData);
+
+        return redirect()->route('bidang.index')->with([
+            'message' => 'Bidang/Departemen baru berhasil ditambahkan!',
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -58,7 +61,10 @@ class BidangController extends Controller
      */
     public function edit(Bidang $bidang)
     {
-        //
+        return view('bidang.edit', [
+            'title_page' => 'Edit Bidang',
+            'bidang' => $bidang,
+        ]);
     }
 
     /**
@@ -70,7 +76,14 @@ class BidangController extends Controller
      */
     public function update(UpdateBidangRequest $request, Bidang $bidang)
     {
-        //
+        $validatedData = $request->validated();
+
+        $bidang->update($validatedData);
+
+        return redirect()->route('bidang.index')->with([
+            'message' => 'Data Bidang/Departemen berhasil diperbarui!',
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -81,6 +94,11 @@ class BidangController extends Controller
      */
     public function destroy(Bidang $bidang)
     {
-        //
+        $bidang->delete();
+
+        return redirect()->route('bidang.index')->with([
+            'message' => 'Data Bidang/Departemen berhasil dihapus!',
+            'status' => 'success'
+        ]);
     }
 }

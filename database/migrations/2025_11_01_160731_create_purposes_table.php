@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('bidangs', function (Blueprint $table) {
+        Schema::create('purposes', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique(); // contoh: "Bidang Pemerintahan", "Bidang Keuangan"
+            $table->string('name')->unique(); // contoh: "Kunjungan", "Rapat", "Mengantar Surat"
             $table->text('description')->nullable();
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bidangs');
+        Schema::dropIfExists('purposes');
     }
 };

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBidangRequest extends FormRequest
+class StorePurposeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class StoreBidangRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255|unique:bidangs,name',
+            'name' => 'required|string|max:255|unique:purposes,name',
             'description' => 'required|string|max:1000',
         ];
     }

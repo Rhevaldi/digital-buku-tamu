@@ -53,6 +53,18 @@
                 <!-- Data User (Hanya Admin) -->
                 @role('Admin')
                     <li class="nav-item">
+                        <a href="{{ route('purpose.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-address-book"></i>
+                            <p>Manajemen Kunjungan</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('bidang.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-building"></i>
+                            <p>Bidang/Departemen</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('users.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-user-friends"></i>
                             <p>Data User</p>

@@ -9,14 +9,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Bidang extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'name',
-        'description',
-    ];
+    protected $fillable = ['name', 'description'];
 
-    public function tamu(): HasMany
+    public function tamu()
     {
-        return $this->hasMany(GuestBook::class);
+        return $this->hasMany(GuestBook::class, 'bidang_id');
     }
 }
-

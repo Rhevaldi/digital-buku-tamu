@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BidangController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurposeController;
 use App\Http\Controllers\GuestBookController;
@@ -58,6 +59,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/data-user/{user}', [UserController::class, 'update'])->name('users.update');
 
         Route::resource('purpose', PurposeController::class);
+        Route::resource('bidang', BidangController::class);
     });
 });
 

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('bidangs', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique(); // contoh: "Bidang Pemerintahan", "Bidang Keuangan"
             $table->text('description')->nullable();
             $table->timestamps();
         });

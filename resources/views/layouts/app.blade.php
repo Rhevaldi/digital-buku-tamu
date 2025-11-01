@@ -93,6 +93,7 @@
         $('#tableTamu').DataTable();
         $('.usersTable').DataTable();
         $('.purposesTable').DataTable();
+        $('.bidangsTable').DataTable();
 
         function alertStatus(message, status) {
             Swal.fire({

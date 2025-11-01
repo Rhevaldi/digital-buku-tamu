@@ -4,13 +4,14 @@
         <div class="container-fluid">
             <div class="row mb-0">
                 <div class="col-sm-6">
-                    <h1>Manajemen Keperluan</h1>
+                    <h1>Manajemen Bidang/Departemen</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('purpose.index') }}">Manajemen Keperluan</a></li>
-                        <li class="breadcrumb-item active">{{ $purpose->name }}</li>
+                        <li class="breadcrumb-item"><a href="{{ route('bidang.index') }}">Manajemen Bidang/Departemen</a>
+                        </li>
+                        <li class="breadcrumb-item active">{{ $bidang->name }}</li>
                     </ol>
                 </div>
             </div>
@@ -23,21 +24,21 @@
                     <div class="card">
                         <div class="card-header bg-success text-white">
                             <p class="float-left mb-0 pt-1 font-weight-bold">{{ $title_page }}</p>
-                            <a href="{{ route('purpose.index') }}" class="btn btn-light btn-sm float-right"
+                            <a href="{{ route('bidang.index') }}" class="btn btn-light btn-sm float-right"
                                 style="color:black !important">
                                 <i class="fas fa-arrow-left mr-1"></i> Kembali
                             </a>
                         </div>
 
-                        <form method="POST" action="{{ route('purpose.update', $purpose->id) }}">
+                        <form method="POST" action="{{ route('bidang.update', $bidang->id) }}">
                             @csrf
                             @method('patch')
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="name">Jenis Keperluan <code>*</code></label>
+                                    <label for="name">Nama Bidang/Departemen <code>*</code></label>
                                     <input type="text" name="name" id="name"
                                         class="form-control @error('name') is-invalid @enderror"
-                                        value="{{ $purpose->name }}" placeholder="Masukkan jenis/nama keperluan"
+                                        value="{{ $bidang->name }}" placeholder="Masukkan nama bidang/departemen"
                                         required autofocus>
                                     @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -46,7 +47,7 @@
                                 <div class="form-group">
                                     <label for="description">Deskripsi <code>*</code></label>
                                     <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
-                                        placeholder="Masukkan deskripsi keperluan" required>{{ $purpose->description }}</textarea>
+                                        placeholder="Masukkan deskripsi bidang/departemen" required>{{ $bidang->description }}</textarea>
                                     @error('description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror

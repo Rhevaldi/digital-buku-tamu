@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Buku Tamu Digital</title>
+    <title>Buku Tamu Digital - DISPERKIM KUKAR</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/dist/img/AdminLTELogo.png') }}">
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -26,6 +27,16 @@
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed bg-light">
+
+    <!-- PESAN SWEETALERT 2 -->
+    @if (session('message') || session('status'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                alertStatus('{{ session('message') }}', '{{ session('status') }}');
+            });
+        </script>
+    @endif
+
     <div class="wrapper">
         <form method="POST" action="{{ route('logout') }}" id="logout-form">
             @csrf
@@ -81,6 +92,17 @@
     <script>
         $('#tableTamu').DataTable();
         $('.usersTable').DataTable();
+        $('.purposesTable').DataTable();
+
+        function alertStatus(message, status) {
+            Swal.fire({
+                title: status == 'success' ? 'Berhasil!' : 'Gagal!',
+                text: message,
+                icon: status,
+                showCancelButton: false,
+                showConfirmButton: false,
+            })
+        }
 
         function confirmDelete() {
             const form = document.getElementById('delete-account-form');

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurposeController;
 use App\Http\Controllers\GuestBookController;
 
 /*
@@ -47,13 +48,17 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // ✅ Tambahkan route untuk melihat data user jika admin
-    Route::get('/data-user', [UserController::class, 'index'])->name('users.index');
-    Route::get('/data-user/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::delete('/data-user/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-    Route::get('/data-user/create', [UserController::class, 'create'])->name('users.create');
-    Route::post('/data-user', [UserController::class, 'store'])->name('users.store');
-    Route::put('/data-user/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::group(['middleware' => ['role:Admin']], function () {
+        // ✅ Tambahkan route untuk melihat data user jika admin
+        Route::get('/data-user', [UserController::class, 'index'])->name('users.index');
+        Route::get('/data-user/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::delete('/data-user/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::get('/data-user/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('/data-user', [UserController::class, 'store'])->name('users.store');
+        Route::put('/data-user/{user}', [UserController::class, 'update'])->name('users.update');
+
+        Route::resource('purpose', PurposeController::class);
+    });
 });
 
 // ================= BUKU TAMU =================

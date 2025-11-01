@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             BidangSeeder::class,
+            PurposeSeeder::class,
         ]);
 
         // === Buat role default ===

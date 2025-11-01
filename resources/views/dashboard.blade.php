@@ -19,7 +19,7 @@
                         <div class="card-body text-center">
                             <h2 class="text-warning">{{ $totalUser ?? 0 }}</h2>
                             <p class="mb-2 font-weight-bold">Total Pengguna</p>
-                            <a href="{{ route('profile.index') }}" class="btn btn-outline-warning btn-sm">
+                            <a href="{{ route('users.index') }}" class="btn btn-outline-warning btn-sm">
                                 <i class="fas fa-users"></i> Kelola Pengguna
                             </a>
                         </div>

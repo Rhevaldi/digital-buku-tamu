@@ -4,11 +4,12 @@
     @endphp
 
     <div class="container py-4">
-        @if ($user->is_admin)
+        @role('Admin')
             {{-- ====================== DASHBOARD ADMIN ====================== --}}
             <div class="text-center mb-4">
                 <h1 class="h3 text-primary font-weight-bold">📘 Buku Tamu Digital</h1>
-                <p class="text-muted">Selamat datang, <strong>Admin</strong>! Berikut adalah ringkasan sistem Buku Tamu Digital.</p>
+                <p class="text-muted">Selamat datang, <strong>Admin</strong>! Berikut adalah ringkasan sistem Buku Tamu
+                    Digital.</p>
             </div>
 
             <div class="row justify-content-center mb-4">
@@ -77,12 +78,13 @@
                     </div>
                 </div>
             </div>
-        @else
+        @endrole
+        @role('Tamu')
             {{-- ====================== DASHBOARD USER BIASA ====================== --}}
             <div class="text-center">
                 <h1 class="h3 text-primary font-weight-bold">📘 Buku Tamu Digital</h1>
                 <p class="text-muted">Selamat datang, {{ $user->name ?? 'Tamu' }}!</p>
             </div>
-        @endif
+        @endrole
     </div>
 </x-app-layout>

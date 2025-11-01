@@ -1,13 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
-use Illuminate\Http\Request;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\GuestBookController;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\GuestBook;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GuestBookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,9 +46,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // ✅ Tambahkan route untuk melihat data user jika admin
-    Route::get('/data-user', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/data-user', [UserController::class, 'index'])->name('users.index');
+    Route::get('/data-user/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::delete('/data-user/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('/data-user/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/data-user', [UserController::class, 'store'])->name('users.store');
+    Route::put('/data-user/{user}', [UserController::class, 'update'])->name('users.update');
 });
 
 // ================= BUKU TAMU =================
@@ -95,4 +101,4 @@ Route::post('/reset-password-manual', function (Request $request) {
 })->name('password.reset.manual');
 
 // ================= AUTH DEFAULT (Login/Register) =================
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -2,7 +2,7 @@
     <!-- Brand Logo -->
     <a href="{{ route('dashboard') }}" class="brand-link text-white">
         <img src="{{ asset('assets/dist/img/AdminLTELogo.png') }}" alt="Logo"
-             class="brand-image img-circle elevation-3" style="opacity: .8">
+            class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">BUKU TAMU</span>
     </a>
 
@@ -11,22 +11,20 @@
         <!-- Sidebar user panel -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+                <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
+                    alt="User Image">
             </div>
             <div class="info">
-                @php
-                    $user = Auth::user();
-                    $isAdmin = optional($user)->is_admin;
-                @endphp
                 <a href="#" class="d-block text-white">
-                    {{ $isAdmin ? 'ADMIN' : 'TAMU' }}
+                    {{ Auth::user()->roles()->first()->name }}
                 </a>
             </div>
         </div>
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-widget="treeview" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-widget="treeview"
+                data-accordion="false">
 
                 <!-- Dashboard -->
                 <li class="nav-item">
@@ -53,14 +51,14 @@
                 </li>
 
                 <!-- Data User (Hanya Admin) -->
-                @if ($isAdmin)
-                <li class="nav-item">
-                    <a href="{{ route('profile.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-user-friends"></i>
-                        <p>Data User</p>
-                    </a>
-                </li>
-                @endif
+                @role('Admin')
+                    <li class="nav-item">
+                        <a href="{{ route('users.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-user-friends"></i>
+                            <p>Data User</p>
+                        </a>
+                    </li>
+                @endrole
 
                 <!-- Logout -->
                 <li class="nav-item">

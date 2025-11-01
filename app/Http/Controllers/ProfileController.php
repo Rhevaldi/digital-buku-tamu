@@ -13,25 +13,6 @@ use App\Models\User;
 class ProfileController extends Controller
 {
     /**
-     * Halaman untuk ADMIN: Menampilkan daftar semua pengguna.
-     */
-    public function index(): View
-    {
-        $user = Auth::user();
-
-        if (!$user || !$user->is_admin) {
-            abort(403, 'Hanya admin yang dapat mengakses halaman ini.');
-        }
-
-        $users = User::all();
-
-        return view('profile.index', [
-            'title_page' => 'Data User',
-            'users' => $users,
-        ]);
-    }
-
-    /**
      * Halaman untuk USER/ADMIN: Menampilkan form edit profil pribadi.
      */
     public function edit(Request $request): View

@@ -13,7 +13,7 @@ class StoreGuestBookRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -24,7 +24,14 @@ class StoreGuestBookRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nama' => 'required|string|max:255',
+            'no_identitas' => 'required|numeric|max_digits:32',
+            'no_wa' => 'required|string|numeric|max_digits:16',
+            'instansi' => 'required|string|max:255',
+            'alamat' => 'required|string|max:20',
+            'purpose_id' => 'required|exists:purposes,id',
+            'bidang_id' => 'required|exists:bidangs,id',
+            'description' => 'nullable|string',
         ];
     }
 }

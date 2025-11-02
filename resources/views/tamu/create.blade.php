@@ -125,7 +125,7 @@
                                         <div class="form-group">
                                             <label for="description">Deskripsi</label>
                                             <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
-                                                placeholder="Sudah buat janji dengan siapa?" required>{{ old('description') }}</textarea>
+                                                placeholder="Sudah buat janji dengan siapa?">{{ old('description') }}</textarea>
                                             @error('description')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror

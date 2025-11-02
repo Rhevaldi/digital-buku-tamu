@@ -66,6 +66,7 @@ Route::middleware(['auth'])->group(function () {
 // ================= BUKU TAMU =================
 Route::middleware(['auth'])->group(function () {
     Route::resource('tamu', GuestBookController::class);
+    Route::put('/tamu-selesai-kunjungan/{id}', [GuestBookController::class, 'selesaiKunjungan'])->name('tamu.selesaiKunjungan');
 });
 
 // ================= RESET PASSWORD MANUAL =================

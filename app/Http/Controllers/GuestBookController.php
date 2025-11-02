@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Bidang;
 use App\Models\Purpose;
 use App\Models\GuestBook;
@@ -19,7 +20,6 @@ class GuestBookController extends Controller
      */
     public function index()
     {
-        // dd(GuestBook::with('bidang')->orderBy('created_at','DESC')->get());
         View::share([
             'title_page' => 'Buku Tamu Digital',
             'tamu' => GuestBook::with('bidang')->orderBy('created_at', 'DESC')->get(),
@@ -49,32 +49,18 @@ class GuestBookController extends Controller
      * @param  \App\Http\Requests\StoreGuestBookRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreGuestBookRequest $request)
     {
-        // Validasi manual
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'no_ktp' => 'required|string|max:255',
-            'alamat' => 'required|string|max:255',
-            'no_wa' => 'required|string|max:20',
-            'keperluan' => 'required|string|max:255',
-            'bidang_id' => 'required|exists:bidangs,id',
-        ]);
+        $validatedData = $request->validated();
+        // Tambahkan kolom yang diisi otomatis
+        $validatedData['jam_masuk'] = now(); // atau Carbon::now()
+        $validatedData['user_id'] = auth()->id(); // ambil ID user yang sedang login
+        GuestBook::create($validatedData);
 
-        GuestBook::create([
-            'nama' => $validated['nama'],
-            'no_ktp' => $validated['no_ktp'],
-            'alamat' => $validated['alamat'],
-            'no_wa' => $validated['no_wa'],
-            'keperluan' => $validated['keperluan'],
-            'bidang_id' => $validated['bidang_id'],
-            'hari' => \Carbon\Carbon::now()->locale('id')->isoFormat('dddd'),
-            'tanggal' => now()->toDateString(),
-            'jam_masuk' => now()->toTimeString(),
-            'jam_keluar' => now()->addHour()->toTimeString(),
-            "sudah_dikirim_notif" => 0,
+        return redirect()->route('tamu.index')->with([
+            'message' => 'Data tamu baru berhasil ditambahkan!',
+            'status' => 'success'
         ]);
-        return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil disimpan.');
     }
 
     /**
@@ -94,18 +80,14 @@ class GuestBookController extends Controller
      * @param  \App\Models\GuestBook  $guestBook
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(GuestBook $tamu)
     {
-
-        $data = GuestBook::findOrFail($id);
-        // dd($data);
-        View::share([
+        return view('tamu.edit', [
             'title_page' => 'Edit Data Tamu',
-            'tamu' => $data,
             'bidangs' => Bidang::orderBy('created_at', 'DESC')->get(),
+            'purposes' => Purpose::orderBy('created_at', 'DESC')->get(),
+            'tamu' => $tamu,
         ]);
-
-        return view('tamu.edit');
     }
 
     /**
@@ -115,32 +97,21 @@ class GuestBookController extends Controller
      * @param  \App\Models\GuestBook  $guestBook
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateGuestBookRequest $request, GuestBook $tamu)
     {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'no_ktp' => 'required|string|max:255',
-            'alamat' => 'required|string|max:255',
-            'no_wa' => 'required|string|max:20',
-            'keperluan' => 'required|string|max:255',
-            'bidang_id' => 'required|exists:bidangs,id',
+        $validatedData = $request->validated();
 
+        // Cek apakah jam_masuk berubah | Jika ada perubahan, reset jam_keluar ke null
+        if ($validatedData['jam_masuk'] !== $tamu->jam_masuk) {
+            $validatedData['jam_keluar'] = null;
+        }
+
+        $tamu->update($validatedData);
+
+        return redirect()->route('tamu.index')->with([
+            'message' => 'Data tamu berhasil diperbarui!',
+            'status' => 'success'
         ]);
-
-
-        $data = GuestBook::findOrFail($id);
-        // Pastikan hanya mengupdate data yang diizinkan
-        // dd($data);
-
-        $data->update([
-            'nama' => $validated['nama'],
-            'no_ktp' => $validated['no_ktp'],
-            'alamat' => $validated['alamat'],
-            'no_wa' => $validated['no_wa'],
-            'keperluan' => $validated['keperluan'],
-            'bidang_id' => $validated['bidang_id'],
-        ]);
-        return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil di Edit.');
     }
 
     /**
@@ -149,10 +120,39 @@ class GuestBookController extends Controller
      * @param  \App\Models\GuestBook  $guestBook
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(GuestBook $tamu)
     {
-        $data = GuestBook::findOrFail($id);
-        $data->delete();
-        return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil dihapus.');
+        $tamu->delete();
+
+        return redirect()->route('tamu.index')->with([
+            'message' => 'Data tamu berhasil dihapus!',
+            'status' => 'success'
+        ]);
+    }
+
+
+    public function selesaiKunjungan($id)
+    {
+        $tamu = GuestBook::findOrFail($id);
+        $now = Carbon::now();
+
+        // Jika waktu sekarang kurang dari jam_masuk, anggap kunjungan batal
+        if ($now->lt(Carbon::parse($tamu->jam_masuk))) {
+            $tamu->jam_keluar = $tamu->jam_masuk;
+
+            // Tambahkan prefix "(KUNJUNGAN BATAL)" jika belum ada
+            if (!str_starts_with($tamu->description, '(KUNJUNGAN BATAL)')) {
+                $tamu->description = '(KUNJUNGAN BATAL) ' . $tamu->description;
+            }
+        } else {
+            $tamu->jam_keluar = $now;
+        }
+
+        $tamu->save();
+
+        return redirect()->route('tamu.index')->with([
+            'message' => 'Kunjungan tamu berhasil diselesaikan!',
+            'status' => 'success'
+        ]);
     }
 }

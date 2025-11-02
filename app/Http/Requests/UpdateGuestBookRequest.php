@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateGuestBookRequest extends FormRequest
@@ -13,7 +14,7 @@ class UpdateGuestBookRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -24,7 +25,27 @@ class UpdateGuestBookRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nama' => 'required|string|max:255',
+            'no_identitas' => 'required|numeric|max_digits:32',
+            'no_wa' => 'required|string|numeric|max_digits:16',
+            'instansi' => 'required|string|max:255',
+            'alamat' => 'required|string|max:20',
+            'purpose_id' => 'required|exists:purposes,id',
+            'bidang_id' => 'required|exists:bidangs,id',
+            'description' => 'nullable|string',
+            'jam_masuk' => [
+                'required',
+                'date_format:H:i:s',
+                function ($attribute, $value, $fail) {
+                    $inputTime = Carbon::createFromFormat('H:i:s', $value);
+                    $nowTime = Carbon::now();
+
+                    if ($inputTime->lt($nowTime)) {
+                        $fail('Waktu yang dimasukkan sudah lewat! Silakan masukkan jam masuk yang valid.');
+                    }
+                },
+            ],
+
         ];
     }
 }

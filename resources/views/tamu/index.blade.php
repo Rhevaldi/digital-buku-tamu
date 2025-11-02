@@ -29,17 +29,18 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped tamusTable nowrap">
-                                    <thead class="thead-light">
+                                <table class="table table-bordered table-striped tamusTable">
+                                    <thead class="thead-light text-nowrap">
                                         <tr>
                                             <th class="text-center">#</th>
                                             <th>Nama</th>
                                             <th>Instansi</th>
-                                            <th>No KTP</th>
-                                            <th>Alamat</th>
+                                            {{-- <th>No Identitas</th> --}}
+                                            {{-- <th>Alamat</th> --}}
                                             <th>No WA</th>
                                             <th>Keperluan</th>
-                                            <th>Bidang</th>
+                                            <th>Keterangan</th>
+                                            <th>Bidang Tujuan</th>
                                             <th>Tanggal</th>
                                             <th>Jam Masuk</th>
                                             <th>Jam Keluar</th>
@@ -48,22 +49,34 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($tamu as $data)
-                                            <tr>
+                                            <tr
+                                                class="{{ strpos($data->description, 'KUNJUNGAN BATAL') !== false ? 'text-danger font-italic' : '' }}">
                                                 <td class="text-center">{{ $loop->iteration }}</td>
                                                 <td>{{ $data->nama }}</td>
                                                 <td>{{ $data->instansi }}</td>
-                                                <td>{{ mask_identity($data->no_identitas) }}</td>
-                                                <td>{{ $data->alamat }}</td>
+                                                {{-- <td>{{ mask_identity($data->no_identitas) }}</td> --}}
+                                                {{-- <td>{{ $data->alamat }}</td> --}}
                                                 <td>{{ $data->no_wa }}</td>
-                                                <td>{{ $data->keperluan }}</td>
-                                                <td>{{ optional($data->bidang)->name }}</td>
-                                                <td>{{ $data->tanggal }}</td>
+                                                <td class="text-nowrap">{{ optional($data->purpose)->name }}</td>
+                                                <td>{{ $data->description ?? '-' }}</td>
+                                                <td class="text-nowrap">{{ optional($data->bidang)->name }}</td>
+                                                <td class="text-nowrap">
+                                                    {{ \Carbon\Carbon::parse($data->created_at)->translatedFormat('l, d-m-Y') }}
+                                                </td>
                                                 <td>{{ $data->jam_masuk }}</td>
-                                                <td>
+                                                <td class="text-nowrap">
                                                     @if ($data->jam_keluar)
                                                         {{ $data->jam_keluar }}
                                                     @else
-                                                        <span class="badge badge-warning">Belum keluar</span>
+                                                        <form action="{{ route('tamu.selesaiKunjungan', $data->id) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Selesaikan kunjungan? Jika waktu selesai kurang dari jam masuk maka kunjungan dianggap batal.');">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button class="btn btn-primary btn-sm">
+                                                                Selesaikan Kunjungan
+                                                            </button>
+                                                        </form>
                                                     @endif
                                                 </td>
                                                 <td>

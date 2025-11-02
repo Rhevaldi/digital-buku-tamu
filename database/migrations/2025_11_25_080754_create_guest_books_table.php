@@ -41,16 +41,13 @@ return new class extends Migration
 
             // Informasi tamu
             $table->string('nama', 100);
-            $table->text('description')->nullable();
             $table->string('no_identitas', 50)->nullable();
             $table->text('alamat')->nullable();
             $table->string('no_wa', 20)->nullable();
             $table->string('instansi', 100)->nullable();
 
             // Keterangan kedatangan
-            $table->string('keperluan', 100)->nullable(); // bisa redundant dengan purpose, tapi tetap disimpan untuk input bebas
-            $table->string('hari', 20)->nullable();
-            $table->date('tanggal');
+            $table->text('description')->nullable();
             $table->time('jam_masuk');
             $table->time('jam_keluar')->nullable();
 

@@ -7,7 +7,9 @@ use App\Models\Bidang;
 use App\Models\Purpose;
 use App\Models\GuestBook;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Response;
 use App\Http\Requests\StoreGuestBookRequest;
 use App\Http\Requests\UpdateGuestBookRequest;
 
@@ -38,10 +40,50 @@ class GuestBookController extends Controller
             'title_page' => 'Buku Tamu Digital',
             'bidangs' => Bidang::orderBy('created_at', 'DESC')->get(),
             'purposes' => Purpose::orderBy('created_at', 'DESC')->get(),
+            'tamu' => [] // atau null jika kamu ingin default kosong
         ]);
 
         return view('tamu.create');
     }
+
+    // public function previewSpm(StoreGuestBookRequest $request)
+    // {
+    //     $validatedData = $request->validated();
+    //     $validatedData['jam_masuk'] = now();
+    //     $validatedData['user_id'] = auth()->id();
+
+    //     $imgPath = public_path('assets/img/spm-qrcode.jpg');
+
+    //     if (!file_exists($imgPath)) {
+    //         return back()->withInput()->with([
+    //             'message' => 'SPM Link Gagal. File QRCode tidak ditemukan.',
+    //             'status' => 'error'
+    //         ]);
+    //     }
+
+    //     $response = Http::attach('file', file_get_contents($imgPath), 'qrcode.png')
+    //         ->post('https://api.qrserver.com/v1/read-qr-code/');
+
+    //     $data = $response->json();
+
+    //     if (empty($data[0]['symbol'][0]['data'])) {
+    //         return back()->withInput()->with([
+    //             'message' => 'SPM Link Gagal. QRCode tidak dapat dibaca.',
+    //             'status' => 'error'
+    //         ]);
+    //     }
+
+    //     $decodedText = $data[0]['symbol'][0]['data'];
+
+    //     // Kirim data ke create.view untuk ditampilkan di modal
+    //     return view('tamu.create', [
+    //         'title_page' => 'Buku Tamu Digital',
+    //         'bidangs' => Bidang::orderBy('created_at', 'DESC')->get(),
+    //         'purposes' => Purpose::orderBy('created_at', 'DESC')->get(),
+    //         'tamu' => $validatedData,
+    //         'spm_link' => $decodedText
+    //     ]);
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -55,12 +97,43 @@ class GuestBookController extends Controller
         // Tambahkan kolom yang diisi otomatis
         $validatedData['jam_masuk'] = now(); // atau Carbon::now()
         $validatedData['user_id'] = auth()->id(); // ambil ID user yang sedang login
-        GuestBook::create($validatedData);
 
-        return redirect()->route('tamu.index')->with([
-            'message' => 'Data tamu baru berhasil ditambahkan!',
-            'status' => 'success'
-        ]);
+        // Arahkan agar tamu masuk ke link spm untuk pengisian survei
+        // QRCode File Path
+        $imgPath = public_path('assets/img/spm-qrcode.jpg');
+        // Pastikan file ada
+        if (!file_exists($imgPath)) {
+            return back()->withInput()->with([
+                'message' => 'SPM Link Gagal. Pastikan file QRCode ke SPM ada dan formatnya benar.',
+                'status' => 'error'
+            ]);
+        }
+        // Decode QRCode menggunakan API eksternal (API dari api.qrserver.com)
+        $response = Http::attach('file', file_get_contents($imgPath), 'qrcode.png')->post('https://api.qrserver.com/v1/read-qr-code/');
+        $data = $response->json();
+        if (!empty($data[0]['symbol'][0]['data'])) {
+            // Simpan data tamu jika SPM Link berhasil
+            GuestBook::create($validatedData);
+            $decodedText = $data[0]['symbol'][0]['data'];
+            // return redirect()->to($decodedText);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Register Tamu Berhasil, Silahkan isi survei SPM!',
+                'spm_link' => $decodedText // hasil decode dari QRCode
+            ]);
+        } else {
+            // dd("Failed to decode QRCode.");
+            return back()->withInput()->with([
+                'message' => 'SPM Link Gagal. Pastikan file QRCode ke SPM ada dan formatnya benar.',
+                'status' => 'error'
+            ]);
+        }
+
+
+        // return redirect()->route('tamu.index')->with([
+        //     'message' => 'Data tamu baru berhasil ditambahkan!',
+        //     'status' => 'success'
+        // ]);
     }
 
     /**

@@ -11,7 +11,7 @@
                                 <i class="fas fa-arrow-left mr-1"></i> Kembali
                             </a>
                         </div>
-                        <form action="{{ route('tamu.store') }}" method="POST">
+                        <form action="{{ route('tamu.store') }}" method="POST" id="formGuest">
                             @csrf
                             <div class="card-body">
                                 <div class="row">
@@ -138,8 +138,12 @@
                                     <button type="reset" class="btn btn-secondary">
                                         <i class="fas fa-undo mr-1"></i> Reset
                                     </button>
-                                    <button type="submit" class="btn btn-success">
+                                    <button type="submit" class="btn btn-success submitBtn">
                                         <i class="fas fa-save mr-1"></i> Simpan
+                                    </button>
+                                    <button type="button" class="btn btn-success loadingBtn" style="display: none;"
+                                        disabled>
+                                        <i class="fas fa-spinner fa-spin mr-1"></i> Pengisian SPM ...
                                     </button>
                                 </div>
                             </div>
@@ -147,13 +151,117 @@
                     </div>
                 </div>
             </div>
-        </div>
-        </div>
-        <!-- /.row -->
+            <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
+
+    @push('scripts')
+        <script>
+            // Validasi inputan ke controller store menggunakan jquery pada saat submit form
+            $('#formGuest').on('submit', function(e) {
+                e.preventDefault(); // Mencegah form submit secara default
+                // Sembunyikan tombol submit
+                $('.submitBtn').hide();
+                // Tampilkan tombol loading
+                $('.loadingBtn').show();
+
+
+                var form = $(this);
+                var url = form.attr('action');
+                var method = form.attr('method');
+                var formData = form.serialize();
+
+                $.ajax({
+                    url: url,
+                    type: method,
+                    data: formData,
+                    success: function(response) {
+                        // Tampilkan tombol submit
+                        $('.submitBtn').show();
+                        // Sembunyikan tombol loading
+                        $('.loadingBtn').hide();
+                        console.log(response.status);
+
+                        if (response.status === 'success' && response.spm_link) {
+
+                            alertStatus(response.message, response.status);
+
+                            // Tampilkan modal
+                            const spmModal = new bootstrap.Modal(document.getElementById('spmModal'), {
+                                backdrop: 'static',
+                                keyboard: false
+                            });
+                            spmModal.show();
+
+                            // Set iframe src ke link hasil decode
+                            $('#spmIframe').attr('href', response.spm_link);
+
+                            // Tombol simpan setelah modal ditutup
+                            $('#confirmSpm').on('click', function() {
+                                window.location.href = "{{ route('tamu.create') }}";
+                            });
+                        }
+
+                    },
+                    error: function(xhr) {
+                        // Tampilkan tombol submit
+                        $('.submitBtn').show();
+                        // Sembunyikan tombol loading
+                        $('.loadingBtn').hide();
+                        var errors = xhr.responseJSON.errors;
+
+                        // Reset semua error sebelumnya
+                        $('.is-invalid').removeClass('is-invalid');
+                        $('.invalid-feedback').remove();
+
+                        // Loop dan tampilkan error
+                        $.each(errors, function(key, messages) {
+                            var input = $('[name="' + key + '"]');
+
+                            // Tambahkan class is-invalid
+                            input.addClass('is-invalid');
+
+                            // Tambahkan pesan error setelah elemen input
+                            input.after('<div class="invalid-feedback">' + messages[0] + '</div>');
+                        });
+                    }
+                });
+            });
+        </script>
+    @endpush
+
+
+    <!-- Modal Preview SPM -->
+    <div class="modal fade" id="spmModal" tabindex="-1" aria-labelledby="spmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Preview Survei Kepuasan Masyarakat</h5>
+                </div>
+                <div class="modal-body p-0 text-center">
+                    <div class="row">
+                        <div class="col-12">
+                            <img src="{{ asset('assets/img/spm-qrcode.jpg') }}" alt="spm-qrcode"
+                                class="img-fluid p-2">
+                        </div>
+                        <div class="col-12 mb-2">
+                            {{-- <iframe id="spmIframe" src="" style="width:100%; height:600px; border:none;"></iframe> --}}
+                            <a href="" target="_blank" class="btn btn-warning" id="spmIframe">
+                                Buka Survei SPM
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success mx-auto" id="confirmSpm">
+                        Selesai & Simpan Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 

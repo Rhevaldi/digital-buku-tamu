@@ -103,6 +103,11 @@
                 icon: status,
                 showCancelButton: false,
                 showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                timer: 2000, // Tutup otomatis setelah 2 detik
+                timerProgressBar: true
+
             })
         }
 
@@ -150,6 +155,8 @@
             });
         }
     </script>
+
+    @stack('scripts')
 </body>
 
 </html>

@@ -24,7 +24,7 @@ class UserController extends Controller
         ]);
     }
 
-  
+
     public function create(): View
     {
         $roles = Role::all();
@@ -35,7 +35,7 @@ class UserController extends Controller
         ]);
     }
 
-   
+
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -45,20 +45,20 @@ class UserController extends Controller
             'role'                  => 'required|exists:roles,name',
         ]);
 
-        
+
         $user = User::create([
             'name'     => $validated['name'],
             'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
 
-        
+
         $user->assignRole($validated['role']);
 
         return redirect()->route('users.index')->with('success', 'Pengguna baru berhasil ditambahkan.');
     }
 
-  
+
     public function edit(string $id): View
     {
         $user = User::findOrFail($id);
@@ -71,7 +71,7 @@ class UserController extends Controller
         ]);
     }
 
-  
+
     public function update(Request $request, string $id): RedirectResponse
     {
         $user = User::findOrFail($id);
@@ -83,7 +83,7 @@ class UserController extends Controller
             'password' => 'nullable|min:6|confirmed',
         ]);
 
-       
+
         $user->update([
             'name'     => $validated['name'],
             'email'    => $validated['email'],
@@ -92,13 +92,12 @@ class UserController extends Controller
                 : $user->password,
         ]);
 
-   
         $user->syncRoles([$validated['role']]);
 
         return redirect()->route('users.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
-    
+
     public function destroy(string $id): RedirectResponse
     {
         $user = User::findOrFail($id);

@@ -9,6 +9,7 @@ use App\Models\GuestBook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Response;
 use App\Http\Requests\StoreGuestBookRequest;
 use App\Http\Requests\UpdateGuestBookRequest;
 use Illuminate\Support\Facades\Log;
@@ -42,6 +43,7 @@ class GuestBookController extends Controller
             'title_page' => 'Buku Tamu Digital',
             'bidangs' => Bidang::orderBy('created_at', 'DESC')->get(),
             'purposes' => Purpose::orderBy('created_at', 'DESC')->get(),
+            'tamu' => [] // atau null jika kamu ingin default kosong
         ]);
 
         return view('tamu.create');
@@ -54,41 +56,74 @@ class GuestBookController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreGuestBookRequest $request)
-{
-    $validatedData = $request->validated();
-    $validatedData['jam_masuk'] = now();
-    $validatedData['user_id'] = auth()->id();
+    {
+        $validatedData = $request->validated();
+        $validatedData['jam_masuk'] = now();
+        $validatedData['user_id'] = auth()->id();
 
-    $tamu = GuestBook::create($validatedData);
+        $validatedData = $request->validated();
+        // Tambahkan kolom yang diisi otomatis
+        $validatedData['jam_masuk'] = now(); // atau Carbon::now()
+        $validatedData['user_id'] = auth()->id(); // ambil ID user yang sedang login
 
-    // kirim pesan pertama
-    try {
-        $nomor = preg_replace('/^0/', '62', $tamu->no_wa);
-        $pesan = "Halo {$tamu->nama}, terima kasih sudah mengisi buku tamu di Dinas.
-Kunjungan Anda telah tercatat pada hari {$tamu->hari}, tanggal {$tamu->tanggal} pukul {$tamu->jam_masuk}.
-Selamat berkunjung!";
-
-        $response = Http::post('http://localhost:3000/send-message', [
-            'number' => "{$nomor}@c.us",
-            'message' => $pesan
-        ]);
-
-        if ($response->failed()) {
-            Log::error("Gagal kirim pesan ke {$nomor}");
+        // Arahkan agar tamu masuk ke link spm untuk pengisian survei
+        // QRCode File Path
+        $imgPath = public_path('assets/img/spm-qrcode.jpg');
+        // Pastikan file ada
+        if (!file_exists($imgPath)) {
+            return back()->withInput()->with([
+                'message' => 'SPM Link Gagal. Pastikan file QRCode ke SPM ada dan formatnya benar.',
+                'status' => 'error'
+            ]);
         }
-    } catch (\Exception $e) {
-        Log::error("Error kirim WhatsApp: " . $e->getMessage());
+        // Decode QRCode menggunakan API eksternal (API dari api.qrserver.com)
+        $response = Http::attach('file', file_get_contents($imgPath), 'qrcode.png')->post('https://api.qrserver.com/v1/read-qr-code/');
+        $data = $response->json();
+        if (!empty($data[0]['symbol'][0]['data'])) {
+            // Simpan data tamu jika SPM Link berhasil
+            $tamu = GuestBook::create($validatedData);
+            $decodedText = $data[0]['symbol'][0]['data'];
+            // return redirect()->to($decodedText);
+
+
+
+            // kirim pesan pertama
+            try {
+                $nomor = preg_replace('/^0/', '62', $tamu->no_wa);
+                $pesan = "Halo {$tamu->nama}, terima kasih sudah mengisi buku tamu di Dinas.
+                    Kunjungan Anda telah tercatat pada hari {$tamu->hari}, tanggal {$tamu->tanggal} pukul {$tamu->jam_masuk}.
+                    Selamat berkunjung!";
+
+                $response = Http::post('http://localhost:3000/send-message', [
+                    'number' => "{$nomor}@c.us",
+                    'message' => $pesan
+                ]);
+
+                if ($response->failed()) {
+                    Log::error("Gagal kirim pesan ke {$nomor}");
+                }
+            } catch (\Exception $e) {
+                Log::error("Error kirim WhatsApp: " . $e->getMessage());
+            }
+
+            // jadwalkan pengingat otomatis 50 menit kemudian
+            GuestReminderJob::dispatch($tamu->nama, $tamu->no_wa, $tamu->id)
+                ->delay(now()->addMinutes(50));
+
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Register Tamu Berhasil, Silahkan isi survei SPM!',
+                'spm_link' => $decodedText // hasil decode dari QRCode
+            ]);
+        } else {
+            // dd("Failed to decode QRCode.");
+            return back()->withInput()->with([
+                'message' => 'SPM Link Gagal. Pastikan file QRCode ke SPM ada dan formatnya benar.',
+                'status' => 'error'
+            ]);
+        }
     }
-
-    // jadwalkan pengingat otomatis 50 menit kemudian
-    GuestReminderJob::dispatch($tamu->nama, $tamu->no_wa, $tamu->id)
-        ->delay(now()->addMinutes(50));
-
-    return redirect()->route('tamu.index')->with([
-        'message' => 'Data tamu baru berhasil ditambahkan!',
-        'status' => 'success'
-    ]);
-}
 
 
     /**
@@ -157,7 +192,6 @@ Selamat berkunjung!";
             'status' => 'success'
         ]);
     }
-
 
     public function selesaiKunjungan($id)
     {

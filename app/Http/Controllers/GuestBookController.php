@@ -8,8 +8,12 @@ use App\Models\Purpose;
 use App\Models\GuestBook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Http;
 use App\Http\Requests\StoreGuestBookRequest;
 use App\Http\Requests\UpdateGuestBookRequest;
+use Illuminate\Support\Facades\Log;
+use App\Jobs\GuestReminderJob;
+
 
 class GuestBookController extends Controller
 {
@@ -50,18 +54,42 @@ class GuestBookController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreGuestBookRequest $request)
-    {
-        $validatedData = $request->validated();
-        // Tambahkan kolom yang diisi otomatis
-        $validatedData['jam_masuk'] = now(); // atau Carbon::now()
-        $validatedData['user_id'] = auth()->id(); // ambil ID user yang sedang login
-        GuestBook::create($validatedData);
+{
+    $validatedData = $request->validated();
+    $validatedData['jam_masuk'] = now();
+    $validatedData['user_id'] = auth()->id();
 
-        return redirect()->route('tamu.index')->with([
-            'message' => 'Data tamu baru berhasil ditambahkan!',
-            'status' => 'success'
+    $tamu = GuestBook::create($validatedData);
+
+    // kirim pesan pertama
+    try {
+        $nomor = preg_replace('/^0/', '62', $tamu->no_wa);
+        $pesan = "Halo {$tamu->nama}, terima kasih sudah mengisi buku tamu di Dinas.
+Kunjungan Anda telah tercatat pada hari {$tamu->hari}, tanggal {$tamu->tanggal} pukul {$tamu->jam_masuk}.
+Selamat berkunjung!";
+
+        $response = Http::post('http://localhost:3000/send-message', [
+            'number' => "{$nomor}@c.us",
+            'message' => $pesan
         ]);
+
+        if ($response->failed()) {
+            Log::error("Gagal kirim pesan ke {$nomor}");
+        }
+    } catch (\Exception $e) {
+        Log::error("Error kirim WhatsApp: " . $e->getMessage());
     }
+
+    // jadwalkan pengingat otomatis 50 menit kemudian
+    GuestReminderJob::dispatch($tamu->nama, $tamu->no_wa, $tamu->id)
+        ->delay(now()->addMinutes(50));
+
+    return redirect()->route('tamu.index')->with([
+        'message' => 'Data tamu baru berhasil ditambahkan!',
+        'status' => 'success'
+    ]);
+}
+
 
     /**
      * Display the specified resource.

@@ -46,45 +46,6 @@ class GuestBookController extends Controller
         return view('tamu.create');
     }
 
-    // public function previewSpm(StoreGuestBookRequest $request)
-    // {
-    //     $validatedData = $request->validated();
-    //     $validatedData['jam_masuk'] = now();
-    //     $validatedData['user_id'] = auth()->id();
-
-    //     $imgPath = public_path('assets/img/spm-qrcode.jpg');
-
-    //     if (!file_exists($imgPath)) {
-    //         return back()->withInput()->with([
-    //             'message' => 'SPM Link Gagal. File QRCode tidak ditemukan.',
-    //             'status' => 'error'
-    //         ]);
-    //     }
-
-    //     $response = Http::attach('file', file_get_contents($imgPath), 'qrcode.png')
-    //         ->post('https://api.qrserver.com/v1/read-qr-code/');
-
-    //     $data = $response->json();
-
-    //     if (empty($data[0]['symbol'][0]['data'])) {
-    //         return back()->withInput()->with([
-    //             'message' => 'SPM Link Gagal. QRCode tidak dapat dibaca.',
-    //             'status' => 'error'
-    //         ]);
-    //     }
-
-    //     $decodedText = $data[0]['symbol'][0]['data'];
-
-    //     // Kirim data ke create.view untuk ditampilkan di modal
-    //     return view('tamu.create', [
-    //         'title_page' => 'Buku Tamu Digital',
-    //         'bidangs' => Bidang::orderBy('created_at', 'DESC')->get(),
-    //         'purposes' => Purpose::orderBy('created_at', 'DESC')->get(),
-    //         'tamu' => $validatedData,
-    //         'spm_link' => $decodedText
-    //     ]);
-    // }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -128,12 +89,6 @@ class GuestBookController extends Controller
                 'status' => 'error'
             ]);
         }
-
-
-        // return redirect()->route('tamu.index')->with([
-        //     'message' => 'Data tamu baru berhasil ditambahkan!',
-        //     'status' => 'success'
-        // ]);
     }
 
     /**

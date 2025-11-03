@@ -68,6 +68,9 @@
                                                     @if ($data->jam_keluar)
                                                         {{ $data->jam_keluar }}
                                                     @else
+                                                        @if ($data->sudah_dikirim_notif==1)
+                                                            
+                                                        @endif
                                                         <form action="{{ route('tamu.selesaiKunjungan', $data->id) }}"
                                                             method="POST"
                                                             onsubmit="return confirm('Selesaikan kunjungan? Jika waktu selesai kurang dari jam masuk maka kunjungan dianggap batal.');">

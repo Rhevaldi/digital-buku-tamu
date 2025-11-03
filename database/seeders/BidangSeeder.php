@@ -16,26 +16,33 @@ class BidangSeeder extends Seeder
      */
     public function run()
     {
-        $bidangs = [
+         $bidangs = [
+            //  BAGIAN 
             [
-                'name' => 'Bidang Pemerintahan',
-                'description' => 'Mengurusi administrasi pemerintahan dan pelayanan publik.'
+                'name' => 'Sub Bagian Umum, Ketatalaksanaan dan Kepegawaian',
+                'description' => 'Menangani administrasi umum, tata naskah dinas, ketatalaksanaan, kepegawaian, serta pelayanan internal pada Dinas Perumahan dan Kawasan Permukiman Kabupaten Kutai Kartanegara.'
             ],
             [
-                'name' => 'Bidang Keuangan',
-                'description' => 'Mengelola keuangan dan anggaran instansi.'
+                'name' => 'Sub Bagian Keuangan dan Aset',
+                'description' => 'Mengelola keuangan, anggaran, serta aset milik Dinas Perumahan dan Kawasan Permukiman secara tertib dan akuntabel.'
+            ],
+
+            //  BIDANG 
+            [
+                'name' => 'Bidang Perumahan',
+                'description' => 'Melaksanakan penyusunan dan pelaksanaan kebijakan, pembinaan, serta pengawasan pembangunan rumah layak huni dan perumahan rakyat di wilayah Kabupaten Kutai Kartanegara.'
             ],
             [
-                'name' => 'Bidang Pembangunan',
-                'description' => 'Mengawasi dan melaksanakan kegiatan pembangunan fisik dan non-fisik.'
+                'name' => 'Bidang Kawasan Permukiman',
+                'description' => 'Bertugas dalam penataan, pengembangan, dan peningkatan kualitas kawasan permukiman agar sesuai dengan standar lingkungan yang sehat, aman, dan berkelanjutan.'
             ],
             [
-                'name' => 'Bidang Kesejahteraan Rakyat',
-                'description' => 'Menangani urusan sosial, pendidikan, dan kesehatan masyarakat.'
+                'name' => 'Bidang Prasarana dan Sarana Utilitas Umum',
+                'description' => 'Melaksanakan pembangunan, pemeliharaan, dan pengelolaan prasarana serta sarana utilitas umum dalam mendukung penyediaan perumahan dan kawasan permukiman.'
             ],
             [
-                'name' => 'Bidang Umum dan Kepegawaian',
-                'description' => 'Mengatur urusan kepegawaian, tata usaha, dan umum.'
+                'name' => 'Bidang Sertifikasi, Kualifikasi, Klasifikasi, dan Registrasi Perumahan dan Kawasan Permukiman',
+                'description' => 'Mengelola kegiatan sertifikasi, kualifikasi, klasifikasi, dan registrasi penyelenggaraan perumahan serta kawasan permukiman di lingkungan Dinas Perumahan dan Kawasan Permukiman Kabupaten Kutai Kartanegara.'
             ],
         ];
 

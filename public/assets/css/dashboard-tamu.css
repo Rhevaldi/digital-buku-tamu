@@ -1,0 +1,69 @@
+/* ======================
+   DASHBOARD TAMU STYLING
+   ====================== */
+
+/* Area utama background */
+.dashboard-tamu {
+    position: relative;
+    height: 100vh;
+    background: url('../img/bg-dinas.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+}
+
+/* Lapisan transparan gelap di atas background */
+.dashboard-tamu .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1;
+}
+
+/* Konten utama (teks dan tombol) */
+.dashboard-content {
+    position: relative;
+    z-index: 2;
+    padding: 3rem 1rem;
+}
+
+.dashboard-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.dashboard-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* Tombol utama */
+.dashboard-content a.btn {
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-content a.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.3);
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+    .dashboard-content h1 {
+        font-size: 2rem;
+    }
+    .dashboard-content p {
+        font-size: 1rem;
+    }
+    .dashboard-content a.btn {
+        font-size: 0.9rem;
+        padding: 0.75rem 1.5rem;
+    }
+}

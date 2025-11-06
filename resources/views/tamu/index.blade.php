@@ -58,7 +58,7 @@
                                                 {{-- <td>{{ $data->alamat }}</td> --}}
                                                 <td>{{ $data->no_wa }}</td>
                                                 <td class="text-nowrap">{{ optional($data->purpose)->name }}</td>
-                                                <td>{{ $data->description ?? '-' }}</td>
+                                                <td>{{ optional($data->purpose)->description ?? '-' }}</td>
                                                 <td class="text-nowrap">{{ optional($data->bidang)->name }}</td>
                                                 <td class="text-nowrap">
                                                     {{ \Carbon\Carbon::parse($data->created_at)->translatedFormat('l, d-m-Y') }}

@@ -1,7 +1,7 @@
 <aside class="main-sidebar bg-success elevation-4">
     <!-- Brand Logo -->
     <a href="{{ route('dashboard') }}" class="brand-link text-white">
-        <img src="{{ asset('assets/dist/img/AdminLTELogo.png') }}" alt="Logo"
+        <img src="{{ asset('assets/img/kukar-logo.png') }}" alt="Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">BUKU TAMU</span>
     </a>
@@ -35,20 +35,14 @@
                 </li>
 
                 <!-- Data Tamu -->
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="{{ route('tamu.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-users"></i>
                         <p>Data Tamu</p>
                     </a>
-                </li>
+                </li> --}}
 
-                <!-- Data Profil -->
-                <li class="nav-item">
-                    <a href="{{ route('profile.edit') }}" class="nav-link">
-                        <i class="nav-icon fas fa-user-circle"></i>
-                        <p>Data Profil</p>
-                    </a>
-                </li>
+                
 
                 <!-- Data User (Hanya Admin) -->
                 @role('Admin')
@@ -70,6 +64,13 @@
                             <p>Data User</p>
                         </a>
                     </li>
+                    <!-- Data Profil -->
+                <li class="nav-item">
+                    <a href="{{ route('profile.edit') }}" class="nav-link">
+                        <i class="nav-icon fas fa-user-circle"></i>
+                        <p>Data Profil</p>
+                    </a>
+                </li>
                 @endrole
 
                 <!-- Logout -->

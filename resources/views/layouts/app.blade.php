@@ -26,8 +26,9 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 </head>
 
-<body
-    class="hold-transition sidebar-mini layout-fixed bg-light @if (request()->is('tamu*')) sidebar-collapse @endif">
+<body class="hold-transition sidebar-mini layout-fixed sidebar-collapse">
+
+    {{-- <body class="hold-transition sidebar-mini layout-fixed bg-light @if (request()->is('tamu*')) sidebar-collapse @endif"> --}}
 
     <!-- PESAN SWEETALERT 2 -->
     @if (session('message') || session('status'))
@@ -45,7 +46,7 @@
 
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{ asset('assets/dist/img/AdminLTELogo.png') }}" alt="Logo"
+            <img class="animation__shake" src="{{ asset('assets/img/kukar-logo.png') }}" alt="Logo"
                 height="60" width="60">
         </div>
 

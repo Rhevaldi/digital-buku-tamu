@@ -46,8 +46,8 @@
 
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{ asset('assets/img/kukar-logo.png') }}" alt="Logo"
-                height="60" width="60">
+            <img class="animation__shake" src="{{ asset('assets/img/kukar-logo.png') }}" alt="Logo" height="60"
+                width="60">
         </div>
 
         <!-- Navbar -->
@@ -70,11 +70,15 @@
 
     <!-- Scripts -->
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="{{ asset('assets/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- ChartJS -->
+    <script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/adminlte.js') }}"></script>
     <script src="{{ asset('assets/dist/js/demo.js') }}"></script>
-    <script src="{{ asset('assets/dist/js/pages/dashboard.js') }}"></script>
+    {{-- <script src="{{ asset('assets/dist/js/pages/dashboard.js') }}"></script> --}}
     <script src="https://cdn.datatables.net/2.3.1/js/dataTables.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- DataTables  & Plugins -->

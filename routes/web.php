@@ -2,6 +2,8 @@
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Bidang;
+use App\Models\Purpose;
 use App\Models\GuestBook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -34,12 +36,41 @@ Route::get('/dashboard', function () {
     $totalUser = User::count();
     $tamuHariIni = $totalTamuMasuk;
 
+    $lastGuestBooks = GuestBook::whereDate('created_at', $today)
+        ->orderBy('created_at', 'desc')
+        ->take(6)
+        ->get();
+
+    // -----------------------------
+    // 📊 Data Kunjungan 6 Bulan Terakhir
+    // -----------------------------
+    $sixMonths = collect();
+    $counts = collect();
+
+    for ($i = 5; $i >= 0; $i--) {
+        $month = Carbon::now()->subMonths($i);
+        $sixMonths->push($month->format('F')); // Nama Bulan (January, February, ...)
+
+        $counts->push(
+            GuestBook::whereYear('created_at', $month->year)
+                ->whereMonth('created_at', $month->month)
+                ->count()
+        );
+    }
+
     return view('dashboard', [
         'title_page' => 'Dashboard',
         'totalTamuMasuk' => $totalTamuMasuk,
         'totalTamuKeluar' => $totalTamuKeluar,
         'totalUser' => $totalUser,
         'tamuHariIni' => $tamuHariIni,
+        'totalBidang' => Bidang::count(),
+        'totalKeperluan' => Purpose::count(),
+        'lastGuestBooks' => $lastGuestBooks,
+
+        // Kirim data grafik ke Blade
+        'chartMonths' => $sixMonths,
+        'chartCounts' => $counts,
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
